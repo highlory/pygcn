@@ -3,6 +3,7 @@ import scipy.sparse as sp
 import torch
 
 
+# 对标签进行 one hot 编码
 def encode_onehot(labels):
     classes = set(labels)
     classes_dict = {c: np.identity(len(classes))[i, :] for i, c in
@@ -12,13 +13,16 @@ def encode_onehot(labels):
     return labels_onehot
 
 
-def load_data(path="../data/cora/", dataset="cora"):
+def load_data(path="./data/cora/", dataset="cora"):
     """Load citation network dataset (cora only for now)"""
     print('Loading {} dataset...'.format(dataset))
 
+    # 从文件中读取数据，得到一个二维数组，第一列为idx，最后一列为标签，中间的为paper的特征
     idx_features_labels = np.genfromtxt("{}{}.content".format(path, dataset),
                                         dtype=np.dtype(str))
+    # 生成特征
     features = sp.csr_matrix(idx_features_labels[:, 1:-1], dtype=np.float32)
+    # 生成标签的 one hot 向量表示
     labels = encode_onehot(idx_features_labels[:, -1])
 
     # build graph
