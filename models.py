@@ -5,6 +5,7 @@ from layers import GraphConvolution
 
 
 class GCN(nn.Module):
+    # nfeat：第一层输入的维度；nhid：中间层的维度；nclass：输出层的维度
     def __init__(self, nfeat, nhid, nclass, dropout):
         super(GCN, self).__init__()
 

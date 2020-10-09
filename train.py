@@ -32,6 +32,7 @@ parser.add_argument('--hidden', type=int, default=16,
                     help='Number of hidden units.')
 parser.add_argument('--dropout', type=float, default=0.5,
                     help='Dropout rate (1 - keep probability).')
+parser.add_argument('-d' ,'--device_id', type=int, default=1, help='device index')
 
 args = parser.parse_args()
 args.cuda = not args.no_cuda and torch.cuda.is_available()
@@ -53,7 +54,8 @@ optimizer = optim.Adam(model.parameters(),
                        lr=args.lr, weight_decay=args.weight_decay)
 
 if args.cuda:
-    torch.cuda.set_device(2)
+    print('所用GPU编号：{}'.format(args.device_id))
+    torch.cuda.set_device(args.device_id)
     model.cuda()
     features = features.cuda()
     adj = adj.cuda()
@@ -68,6 +70,7 @@ def train(epoch):
     model.train()
     optimizer.zero_grad()
     output = model(features, adj)
+    # 损失函数使用nll_loss，因为模型再计算output的时候已经使用了log_softmax
     loss_train = F.nll_loss(output[idx_train], labels[idx_train])
     acc_train = accuracy(output[idx_train], labels[idx_train])
     loss_train.backward()
