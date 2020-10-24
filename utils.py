@@ -43,6 +43,7 @@ def load_data(path="./data/cora/", dataset="cora"):
 
     # 对特征矩阵进行标准化
     features = normalize(features)  # question: 这里为什么要对特征进行标准化
+    
     # 对邻接矩阵进行标准化，在标准化之前先加上一个单位矩阵，构成自环
     # 这里对邻接矩阵进行标准化，相当于公式中的给邻接矩阵左右乘上度矩阵的-1/2次方
     # 因为如果不对邻接矩阵进行标准化的话，和特征矩阵相乘的时候会改变特征原本的分布，产生不可预测的问题
@@ -62,6 +63,10 @@ def load_data(path="./data/cora/", dataset="cora"):
     labels = torch.LongTensor(np.where(labels)[1])
     # 将邻接矩阵转换为tensor类型
     adj = sparse_mx_to_torch_sparse_tensor(adj)
+    # print('adj type:')
+    # print(type(adj))
+    # print('adj shape')
+    # print(adj.size())
 
     # 将训练集、验证集和测试集的id转换为tensor类型
     idx_train = torch.LongTensor(idx_train)
